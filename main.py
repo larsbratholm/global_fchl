@@ -2,6 +2,8 @@ import numpy as np
 import glob
 from qml.representations import generate_fchl_acsf
 from qml.utils import NUCLEAR_CHARGE
+from sklearn.decomposition import PCA
+from plotting import colorplot
 
 class XYZReader(object):
     """
@@ -124,9 +126,14 @@ def create_molecular_representation(coordinates, elements):
 
 
 if __name__ == "__main__":
-    reader = XYZReader('bifur_traj1.xyz')
+    reader = XYZReader('bifur_IRC.xyz')
     coordinates = reader.coordinates
     elements = reader.elements[0]
     x = create_molecular_representation(coordinates, elements)
-
     # Then do PCA or whatever
+    pca = PCA(n_components=2)
+    components = pca.fit_transform(x)
+    #colorplot(components[:107])
+    colorplot(components[:184], image_name="1.png")
+    colorplot(np.concatenate([components[:107],components[184:]]), image_name="2.png")
+
